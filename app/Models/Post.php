@@ -10,4 +10,6 @@ class Post extends Model
     use HasFactory;
     protected $table = 'posts';
 
+    protected $guarded =false;//or $guarded = [] empty massiv , or fillable=['title','content']....
+
 }
