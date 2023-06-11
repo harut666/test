@@ -9,9 +9,7 @@ class PostController extends Controller
 {
     public function index(){
         $posts = Post::all();
-        foreach ($posts as $post){
-            dump($post->image,$post->likes);
-        }
+        dd($posts);
     }
 
 //коллекция данных в виде массива
@@ -58,5 +56,17 @@ class PostController extends Controller
             'is_published' => false,
         ]);
         dd('update');
+    }
+
+    public function delete(){
+        $post=Post::find(3);
+        $post->delete();
+        dd('Deleted');
+    }
+    //  восстановление умно удаленной записи
+    public function restore(){
+        $post = Post::withTrashed()->find(3);
+        $post->restore();
+
     }
 }
