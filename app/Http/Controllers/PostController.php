@@ -7,62 +7,58 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index(){
+    public function index(){ //показ всех
         $posts = Post::all();
-        return view('posts',compact('posts'));//передаем посты во вьюшку
+        return view('post.index',compact('posts'));//передаем посты во вьюшку
     }
 
 //коллекция данных в виде массива
-    public function create(){
-        $postArr=[
-            [
-                'title' => 'Updated Title 1',
-                'content' => 'This is the content of the first post.',
-                'image' => 'first_post.jpg',
-                'likes' => 10,
-                'is_published' => true,
-            ],
-            [
-                'title' => 'Updated Title 2',
-                'content' => 'This is the content of the second post.',
-                'image' => 'second_post.jpg',
-                'likes' => 5,
-                'is_published' => true,
-            ],
-            [
-                'title' => 'Updated Title 3',
-                'content' => 'This is the content of the third post.',
-                'image' => 'third_post.jpg',
-                'likes' => 2,
-                'is_published' => false,
-            ],
-        ];
-        // с помощью цикла проходимся по массиву и добавляем данные в базу данных
-        foreach ($postArr as $value){
-            Post::create($value);
-        }
-        dd('created');
+    public function create(){ // показ страницы создания
+
+        return view('post.create');
     }
 
-    public function update(){
-        $post=Post::find(6);
 
-
-        $post->update([
-            'title' => 'Updated',
-            'content' => 'Updated',
-            'image' => 'Updated.jpg',
-            'likes' => 2,
-            'is_published' => false,
+    public function store(){//отправка данных на сохранение
+        $date = request()->validate([
+            'title' => 'string',
+            'content'=>'string',
+            'image'=>'string'
         ]);
-        dd('update');
+        Post::create($date);
+        return redirect()->route('post.index');
     }
 
-    public function delete(){
+    public function show(Post $post){
+       // $post = Post::findorFail($id);//если не найдет по id  то вернет страниц 404
+
+        return view('post.show',compact('post'));
+    }
+
+    public function edit(Post $post){
+        return view('post.edit',compact('post'));
+    }
+
+    public function update(Post $post){
+        $date = request()->validate([
+            'title' => 'string',
+            'content'=>'string',
+            'image'=>'string'
+        ]);
+        $post->update($date);
+        return redirect()->route('post.show', $post->id);
+    }
+
+   /* public function delete(){
         $post=Post::find(3);
         $post->delete();
         dd('Deleted');
+    }*/
+    public function destroy(Post $post){
+        $post->delete();
+        return redirect()->route('post.index');
     }
+
     //  восстановление умно удаленной записи
     public function restore(){
         $post = Post::withTrashed()->find(3);
