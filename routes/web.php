@@ -32,8 +32,7 @@ Route::get('/posts/{post}/edit',[PostController::class,'edit'])->name('post.edit
 Route::patch('/posts/{post}',[PostController::class,'update'])->name('post.update');
 Route::delete('posts/{post}',[PostController::class,'destroy'])->name('post.delete');
 
-
-
+Route::get('books',[BookController::class,'index'])->name('book.index');
 
 
 Route::get('/posts/update',[PostController::class,'update']);
